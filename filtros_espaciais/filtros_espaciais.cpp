@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <unordered_map>
 
 using namespace cv;
 using namespace std;
@@ -169,4 +170,58 @@ Mat filtro_mediana(const Mat& imgOriginal){
 
     return img;
 
+}
+
+
+// Função para calcular a moda de um vetor
+int calcularModa(const vector<int>& vetor) {
+    unordered_map<int, int> frequencias; // Mapeia valores para suas frequências
+
+    // Contar as frequências de cada valor no vetor
+    for (int valor : vetor) {
+        frequencias[valor]++;
+    }
+
+    // Encontrar o valor com a maior frequência
+    int moda = vetor[0]; // Inicializa com o primeiro elemento
+    int max_frequencia = 0;
+
+    for (const auto& par : frequencias) {
+        if (par.second > max_frequencia) {
+            max_frequencia = par.second;
+            moda = par.first;
+        }
+    }
+
+    return moda;
+}
+
+// Função que aplica o filtro da moda usando os vizinhos
+Mat filtro_moda(const Mat& imgOriginal) {
+    // Copia a imagem original para evitar alterações na imagem original
+    Mat img = imgOriginal.clone();
+
+    // Obter as dimensões da imagem
+    int altura = img.rows;
+    int largura = img.cols;
+
+    // Iterar sobre os pixels da imagem
+    for (int i = 1; i < altura - 1; i++) { // Alterado para evitar acessar pixels fora dos limites
+        for (int j = 1; j < largura - 1; j++) { // Alterado para evitar acessar pixels fora dos limites
+            Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
+
+            // Iterar sobre os canais de cor (B, G, R)
+            for (int canal = 0; canal < 3; canal++) {
+                // Obter os vizinhos do pixel central
+                vector<int> vizinhos = obterVizinhos(img, i, j, canal);
+
+                // Calcular a moda dos vizinhos
+                int moda = calcularModa(vizinhos);
+                
+                pixelCentral[canal] = moda;
+            }
+        }
+    }
+
+    return img;
 }

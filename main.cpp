@@ -29,7 +29,7 @@ int main() {
                     "3 - Gerar histograma Global\n"
                     "4 - Gerar histograma local\n"
                     "5 - Filtros Espacias\n"
-                    "Digite o número da opcao: ";
+                    "\nDigite o número da opcao: ";
     
     
     cout << opcoes;
@@ -53,7 +53,7 @@ int main() {
 
         if(num_opcao == 1){
             int valor;
-            cout << "Digite um valor a ser somado nos pixels para aumentar o brilho: ";
+            cout << "\nDigite um valor a ser somado nos pixels para aumentar o brilho: ";
             cin >> valor;
             Mat imagem_brilho = aumenta_brilho(imagem, valor); // Correção aqui
             imshow("Imagem Brilho Aumentado", imagem_brilho); // Mostra a imagem com brilho aumentado
@@ -90,7 +90,7 @@ int main() {
                                      "2 - Compressao e Expansao\n"
                                      "3 - Dente de Serra\n"
                                      "4 - Escala Logaritmica\n"
-                                     "Digite o numero da opcao: ";
+                                     "\nDigite o numero da opcao: ";
             
             cout << op_transformadas;
             cin >> num_opcao;
@@ -177,7 +177,7 @@ int main() {
                 */
                 int valorLog;
 
-                cout << "Digite um valor para C: \n";
+                cout << "\nDigite um valor para C: \n";
                 cin >> valorLog;
 
                 Mat imagem_log = escala_log(imagem, valorLog);
@@ -240,7 +240,7 @@ int main() {
                                      "2 - Filtro dos K vizinhos mais próximos\n"
                                      "3 - Filtro da Mediana\n"
                                      "4 - Filtro da Moda\n"
-                                     "Digite o numero da opcao: ";
+                                     "\nDigite o numero da opcao: ";
         
         cout << op_filtros_espaciais;
         cin >> num_opcao;
@@ -271,7 +271,7 @@ int main() {
             */
            imagem = imread("./imagens/perry_Sal_Pimenta.jpeg", IMREAD_COLOR);
            int k;
-           cout << "Digite um valor para o K: ";
+           cout << "\nDigite um valor para o K: ";
            cin >> k;
 
            Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k);
@@ -296,6 +296,16 @@ int main() {
            imshow("Filtro da Mediana", imagem_mediana);
            waitKey(0);
 
+        }
+
+        if(num_opcao==4){
+            
+            //Revisar o código, ou encontrar uma imagem que seja boa para teste este filtro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Mat imagem_moda = filtro_moda(imagem);
+
+
+           imshow("Filtro da Moda", imagem_moda);
+           waitKey(0);
         }
     }
 
