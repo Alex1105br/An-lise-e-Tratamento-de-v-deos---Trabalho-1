@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 // comando para rodar o código c++ com o opencv no wsl
 
 
 g++ main.cpp -o main `pkg-config --cflags --libs opencv4` 
+=======
+Comando para rodar o código c++ com o opencv no wsl ou linux:
+
+g++ main.cpp -o main `pkg-config --cflags --libs opencv4` 
+
+./main
+>>>>>>> 8ee578ee65bfda27158f06f4364d1de2493ee985
