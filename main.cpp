@@ -260,6 +260,25 @@ int main() {
            imshow("Filtro da Média", imagem_media);
            waitKey(0);
         }
+
+        if(num_opcao==2){
+             /*
+
+
+            FILTRO DO K VIZINHOS MAIS PRÓXIMOS
+                    
+             
+            */
+           imagem = imread("./imagens/img_ruidoSal.png", IMREAD_COLOR);
+           int k;
+           cout << "Digite um valor para o K: ";
+           cin >> k;
+
+           Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k);
+
+           imshow("Filtro K vizinhos mais próximos", imagem_k_vizinhos);
+           waitKey(0);
+        }
     }
 
     else if(numero_operacao==6){
