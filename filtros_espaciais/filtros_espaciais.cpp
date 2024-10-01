@@ -115,3 +115,58 @@ Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k) {
 
     return img;
 }
+
+
+
+
+// Função para calcular a mediana de um vetor
+int calcularMediana(vector<int>& vetor) {
+    // Ordenar o vetor
+    sort(vetor.begin(), vetor.end());
+
+    // Calcular a mediana
+    int mediana;
+    size_t tamanho = vetor.size();
+    if (tamanho % 2 == 0) {
+        // Se o tamanho for par, a mediana é a média truncada dos dois elementos do meio
+        mediana = (vetor[tamanho / 2 - 1] + vetor[tamanho / 2]) / 2;
+    } else {
+        // Se o tamanho for ímpar, a mediana é o elemento do meio
+        mediana = vetor[tamanho / 2];
+    }
+
+    return mediana;
+}
+
+
+
+Mat filtro_mediana(const Mat& imgOriginal){
+    // Copia a imagem original para evitar alterações na imagem original
+    Mat img = imgOriginal.clone();
+
+    // Obter as dimensões da imagem
+    int altura = img.rows;
+    int largura = img.cols;
+    int mediana;
+
+    // Iterar sobre os pixels da imagem
+    for (int i = 1; i < altura - 1; i++) { // Alterado para evitar acessar pixels fora dos limites
+        for (int j = 1; j < largura - 1; j++) { // Alterado para evitar acessar pixels fora dos limites
+            Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
+
+            // Iterar sobre os canais de cor (B, G, R)
+            for (int canal = 0; canal < 3; canal++) {
+                // Obter os vizinhos do pixel central
+                vector<int> vizinhos = obterVizinhos(img, i, j, canal);
+                
+
+                mediana = calcularMediana(vizinhos);
+                
+                pixelCentral[canal] = mediana;
+            }
+        }
+    }
+
+    return img;
+
+}

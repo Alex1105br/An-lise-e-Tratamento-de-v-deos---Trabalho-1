@@ -238,7 +238,7 @@ int main() {
        string op_filtros_espaciais = "\nEscolha um dos Filtros Espaciais abaixo:\n"
                                      "1 - Filtro da Média\n"
                                      "2 - Filtro dos K vizinhos mais próximos\n"
-                                     "3 - Filtro da Mediaa\n"
+                                     "3 - Filtro da Mediana\n"
                                      "4 - Filtro da Moda\n"
                                      "Digite o numero da opcao: ";
         
@@ -269,7 +269,7 @@ int main() {
                     
              
             */
-           imagem = imread("./imagens/img_ruidoSal.png", IMREAD_COLOR);
+           imagem = imread("./imagens/perry_Sal_Pimenta.jpeg", IMREAD_COLOR);
            int k;
            cout << "Digite um valor para o K: ";
            cin >> k;
@@ -278,6 +278,24 @@ int main() {
 
            imshow("Filtro K vizinhos mais próximos", imagem_k_vizinhos);
            waitKey(0);
+        }
+
+        if(num_opcao==3){
+            /*
+
+
+            FILTRO DA MEDIANA
+                    
+             
+            */
+           imagem = imread("./imagens/perry_Sal_Pimenta.jpeg", IMREAD_COLOR);
+
+           Mat imagem_mediana = filtro_mediana(imagem);
+
+
+           imshow("Filtro da Mediana", imagem_mediana);
+           waitKey(0);
+
         }
     }
 
