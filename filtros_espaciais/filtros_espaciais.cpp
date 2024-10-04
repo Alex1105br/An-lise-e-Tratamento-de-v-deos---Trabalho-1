@@ -60,6 +60,9 @@ Mat filtro_da_media(const Mat& imgOriginal, const std::string& caminhoSalvar) {
 
 
 
+
+
+
 #include <numeric> // Include this header for std::accumulate
 
 
