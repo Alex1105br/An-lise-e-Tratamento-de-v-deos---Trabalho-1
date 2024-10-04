@@ -321,7 +321,7 @@ int main() {
         //Mat imagemQuantizada = reduzirQuantizacaoCores(imagem, 32);
 
         // Aplica o filtro de Roberts na imagem quantizada
-        Mat imagemFiltrada = filtro_roberts(imagem);
+        Mat imagemFiltrada = filtro_roberts(imagem, "./imagens/saida/imagem_filtrada_roberts.jpg");
 
         // Exibir a imagem original e a filtrada
         //imshow("Imagem Original", imagem);
