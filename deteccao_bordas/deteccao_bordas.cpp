@@ -88,7 +88,6 @@ Mat filtro_roberts(const Mat& imagem, const std::string& caminhoSalvar) {
     minMaxLoc(imagemFiltrada, &minVal, &maxVal);
     imagemFiltrada.convertTo(imagemFiltrada, CV_8U, 255.0 / maxVal);
 
-<<<<<<< HEAD
     // Salva a imagem resultante no diretório especificado
     if (!imwrite(caminhoSalvar, imagemFiltrada)) {
         cerr << "Erro ao salvar a imagem no caminho: " << caminhoSalvar << endl;
