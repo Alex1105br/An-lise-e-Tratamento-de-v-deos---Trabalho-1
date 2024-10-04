@@ -6,7 +6,7 @@
 #include "./filtros/filtros.cpp"
 #include "./transformadas/transformadas.cpp"
 #include "./histograma/histograma_global.cpp"
-#include "./histograma/histograma_global2.cpp"
+#include "./histograma/histograma_local.cpp"
 #include "./filtros_espaciais/filtros_espaciais.cpp"
 #include "./deteccao_bordas/deteccao_bordas.cpp"
 
@@ -28,7 +28,7 @@ int main() {
                     "1 - Aplicar filtro\n"
                     "2 - Aplicar Transformadas Radiométricas\n"
                     "3 - Gerar histograma Global\n"
-                    "4 - Gerar histograma local\n"
+                    "4 - Gerar histograma local (4 Partições)\n"
                     "5 - Filtros Espacias\n"
                     "6 - Detecção de Bordas\n"
                     "\nDigite o número da opcao: ";
@@ -201,11 +201,8 @@ int main() {
                     
         */
        
-       // REVISAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        // Calcula o histograma
         
-        calcularSalvarHistogramaGlobal(imagem, "histograma.txt");
+        calcularSalvarHistogramaGlobal(imagem, "histograma_global.txt");
         return 0;
 
 
@@ -220,6 +217,9 @@ int main() {
 
                     
         */
+
+       calcularSalvarHistogramaLocal(imagem, "histograma_local.txt");
+        return 0;
     }
 
     else if(numero_operacao==5){
