@@ -21,20 +21,6 @@ This project implements various image processing techniques using OpenCV. It inc
 - OpenCV
 - C++ Compiler (g++)
 
-## Installation
-
-To get started, clone this repository:
-
-```bash
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
-```
-
-Make sure you have OpenCV installed. You can install OpenCV on your system using the following command:
-
-```bash
-sudo apt-get install libopencv-dev
-```
 
 ## Compilation
 
