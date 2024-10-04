@@ -16,7 +16,7 @@ using namespace cv;
 using namespace std;
 
 int main() {
-    Mat imagem = imread("./imagens/w1.jpeg", IMREAD_COLOR);
+    Mat imagem = imread("./imagens/salaEstar.jpg", IMREAD_COLOR);
     if (imagem.empty()) {
         cout << "Erro ao carregar a imagem!" << endl;
         return -1;
@@ -50,26 +50,26 @@ int main() {
         */
 
 
-        cout << "\nEScolha o numero do filtro:\n" << "1 - Aumentar Brilho" << endl << "2 - Filtro Negativo\n" << "3 - Imagem na Escala Cinza" <<"\n4 - Escala Logaritmica "<< endl;
+        cout << "\nEScolha o numero do filtro:\n" << "1 - Aumentar Brilho" << endl << "2 - Filtro Negativo\n" << "3 - Imagem na Escala Cinza" << endl;
         cin >> num_opcao;
 
         if(num_opcao == 1){
             int valor;
             cout << "\nDigite um valor a ser somado nos pixels para aumentar o brilho: ";
             cin >> valor;
-            Mat imagem_brilho = aumenta_brilho(imagem, valor); // Correção aqui
+            Mat imagem_brilho = aumenta_brilho(imagem, valor, "./imagens/saida/imagem_brilho_aumentado.jpg"); // Correção aqui
             imshow("Imagem Brilho Aumentado", imagem_brilho); // Mostra a imagem com brilho aumentado
             waitKey(0); // Espera a tecla ser pressionada
         }
         if(num_opcao==2){
-            Mat imagem_negativa = filtro_negativo(imagem);
+            Mat imagem_negativa = filtro_negativo(imagem, "./imagens/saida/imagem_negativa.jpg");
 
             imshow("Imagem negativa", imagem_negativa);
             waitKey(0);
 
 
         }if(num_opcao==3){
-            Mat imagem_cinza = filtro_escalaCinza(imagem);
+            Mat imagem_cinza = filtro_escalaCinza(imagem, "./imagens/saida/imagem_escalaCinza.jpg");
 
             imshow("Imagem cinza", imagem_cinza);
             waitKey(0);
@@ -119,7 +119,7 @@ int main() {
                 cin >> zb;
                 cout << endl;
 
-                Mat imagem_exp_cont_linear = expansao_contraste_linear(imagem, za, zb, z1, zn);
+                Mat imagem_exp_cont_linear = expansao_contraste_linear(imagem, za, zb, z1, zn, "./imagens/saida/imagem_ExpContrasteLinear.jpg");
 
                 //Mat imagem_exp_cont_linear2 = expansao_contraste_linear2(imagem, za, zb, z1, zn);
 
@@ -142,7 +142,7 @@ int main() {
                     
             */
 
-                Mat imagem_compressao_expansao = compressao_expansao(imagem);
+                Mat imagem_compressao_expansao = compressao_expansao(imagem, "./imagens/saida/imagem_CompressaoExpansao.jpg");
 
                 imshow("img Compressão Expansão", imagem_compressao_expansao);
                 waitKey(0);
@@ -160,7 +160,7 @@ int main() {
 
                //REVISAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-               Mat imagem_dente_serra = dente_de_serra(imagem);
+               Mat imagem_dente_serra = dente_de_serra(imagem, "./imagens/saida/imagem_DenteSerra.jpg");
 
                 imshow("Img Dente de Serra", imagem_dente_serra);
                 waitKey(0);
@@ -182,7 +182,7 @@ int main() {
                 cout << "\nDigite um valor para C: \n";
                 cin >> valorLog;
 
-                Mat imagem_log = escala_log(imagem, valorLog);
+                Mat imagem_log = escala_log(imagem, valorLog, "./imagens/saida/imagem_EscalaLog.jpg");
 
                 imshow("Imagem log", imagem_log);
                 waitKey(0);
@@ -252,7 +252,7 @@ int main() {
                     
             */
 
-           Mat imagem_media = filtro_da_media(imagem);
+           Mat imagem_media = filtro_da_media(imagem, "./imagens/saida/imagem_Media.jpg");
 
            imshow("Filtro da Média", imagem_media);
            waitKey(0);
@@ -266,12 +266,12 @@ int main() {
                     
              
             */
-           imagem = imread("./imagens/perry_Sal_Pimenta.jpeg", IMREAD_COLOR);
+           
            int k;
            cout << "\nDigite um valor para o K: ";
            cin >> k;
 
-           Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k);
+           Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k, "./imagens/saida/imagem_Kvizinhos.jpg");
 
            imshow("Filtro K vizinhos mais próximos", imagem_k_vizinhos);
            waitKey(0);
@@ -285,9 +285,9 @@ int main() {
                     
              
             */
-           imagem = imread("./imagens/perry_Sal_Pimenta.jpeg", IMREAD_COLOR);
+           
 
-           Mat imagem_mediana = filtro_mediana(imagem);
+           Mat imagem_mediana = filtro_mediana(imagem, "./imagens/saida/imagem_Mediana.jpg");
 
 
            imshow("Filtro da Mediana", imagem_mediana);
@@ -298,7 +298,7 @@ int main() {
         if(num_opcao==4){
             
             //Revisar o código, ou encontrar uma imagem que seja boa para teste este filtro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            Mat imagem_moda = filtro_moda(imagem);
+            Mat imagem_moda = filtro_moda(imagem, "./imagens/saida/imagem_Moda.jpg");
 
 
            imshow("Filtro da Moda", imagem_moda);

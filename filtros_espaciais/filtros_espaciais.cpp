@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-Mat filtro_da_media(const Mat& imgOriginal) {
+Mat filtro_da_media(const Mat& imgOriginal, const std::string& caminhoSalvar) {
     // Clonar a imagem original para evitar alterações diretas nela
     Mat img = imgOriginal.clone();
 
@@ -32,7 +32,7 @@ Mat filtro_da_media(const Mat& imgOriginal) {
                         int novoJ = j + y;
 
                         // Verificar se os vizinhos estão dentro dos limites da imagem
-                        if (novoI >= 0 && novoI < altura && novoJ >= 0 && novoJ < largura) {
+                        if (novoI >= 0 && novoJ >= 0 && novoI < altura && novoJ < largura) {
                             soma += imgOriginal.at<Vec3b>(novoI, novoJ)[canal];
                             count++;
                         }
@@ -46,8 +46,16 @@ Mat filtro_da_media(const Mat& imgOriginal) {
         }
     }
 
+    // Salvar a imagem no caminho especificado
+    if (!imwrite(caminhoSalvar, img)) {
+        cerr << "Erro ao salvar a imagem em: " << caminhoSalvar << endl;
+    } else {
+        cout << "Imagem salva com sucesso em: " << caminhoSalvar << endl;
+    }
+
     return img;
 }
+
 
 
 
@@ -79,9 +87,8 @@ vector<int> obterVizinhos(const Mat& img, int i, int j, int canal) {
     return vetor_k; // Retorna os valores dos vizinhos
 }
 
-// Função que aplica o filtro da média usando os k vizinhos mais próximos
-Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k) {
-    // Copia a imagem original para evitar alterações na imagem original
+Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k, const std::string& caminhoSalvar) {
+    // Copiar a imagem original
     Mat img = imgOriginal.clone();
 
     // Obter as dimensões da imagem
@@ -89,33 +96,39 @@ Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k) {
     int largura = img.cols;
 
     // Iterar sobre os pixels da imagem
-    for (int i = 1; i < altura - 1; i++) { // Alterado para evitar acessar pixels fora dos limites
-        for (int j = 1; j < largura - 1; j++) { // Alterado para evitar acessar pixels fora dos limites
+    for (int i = 1; i < altura - 1; i++) {
+        for (int j = 1; j < largura - 1; j++) {
             Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
 
             // Iterar sobre os canais de cor (B, G, R)
             for (int canal = 0; canal < 3; canal++) {
                 // Obter os vizinhos do pixel central
                 vector<int> vizinhos = obterVizinhos(img, i, j, canal);
-                
-                // Se houver menos que k vizinhos, usar apenas os disponíveis
+
+                // Ordenar e limitar ao valor de k vizinhos
                 if (vizinhos.size() > k) {
-                    sort(vizinhos.begin(), vizinhos.end()); // Ordenar os vizinhos
-                    vizinhos.resize(k); // Manter apenas os k mais próximos
+                    sort(vizinhos.begin(), vizinhos.end());
+                    vizinhos.resize(k);
                 }
 
-                // Calcular a soma dos k vizinhos mais próximos
-                int soma_k_proximos = std::accumulate(vizinhos.begin(), vizinhos.end(), 0); // Use std::accumulate to specify the correct function
-                
-                // Calcular a média dos k valores mais próximos
-                int media_k = (pixelCentral[canal] + soma_k_proximos) / (vizinhos.size() + 1); // +1 para incluir o pixel central
+                // Calcular a média dos k vizinhos mais próximos
+                int soma_k_proximos = std::accumulate(vizinhos.begin(), vizinhos.end(), 0);
+                int media_k = (pixelCentral[canal] + soma_k_proximos) / (vizinhos.size() + 1);
                 pixelCentral[canal] = saturate_cast<uchar>(media_k);
             }
         }
     }
 
+    // Salvar a imagem no caminho especificado
+    if (!imwrite(caminhoSalvar, img)) {
+        cerr << "Erro ao salvar a imagem em: " << caminhoSalvar << endl;
+    } else {
+        cout << "Imagem salva com sucesso em: " << caminhoSalvar << endl;
+    }
+
     return img;
 }
+
 
 
 
@@ -141,36 +154,41 @@ int calcularMediana(vector<int>& vetor) {
 
 
 
-Mat filtro_mediana(const Mat& imgOriginal){
-    // Copia a imagem original para evitar alterações na imagem original
+Mat filtro_mediana(const Mat& imgOriginal, const std::string& caminhoSalvar) {
+    // Copiar a imagem original
     Mat img = imgOriginal.clone();
 
     // Obter as dimensões da imagem
     int altura = img.rows;
     int largura = img.cols;
-    int mediana;
 
     // Iterar sobre os pixels da imagem
-    for (int i = 1; i < altura - 1; i++) { // Alterado para evitar acessar pixels fora dos limites
-        for (int j = 1; j < largura - 1; j++) { // Alterado para evitar acessar pixels fora dos limites
+    for (int i = 1; i < altura - 1; i++) {
+        for (int j = 1; j < largura - 1; j++) {
             Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
 
             // Iterar sobre os canais de cor (B, G, R)
             for (int canal = 0; canal < 3; canal++) {
                 // Obter os vizinhos do pixel central
                 vector<int> vizinhos = obterVizinhos(img, i, j, canal);
-                
 
-                mediana = calcularMediana(vizinhos);
-                
+                // Calcular a mediana dos vizinhos
+                int mediana = calcularMediana(vizinhos);
                 pixelCentral[canal] = mediana;
             }
         }
     }
 
-    return img;
+    // Salvar a imagem no caminho especificado
+    if (!imwrite(caminhoSalvar, img)) {
+        cerr << "Erro ao salvar a imagem em: " << caminhoSalvar << endl;
+    } else {
+        cout << "Imagem salva com sucesso em: " << caminhoSalvar << endl;
+    }
 
+    return img;
 }
+
 
 
 // Função para calcular a moda de um vetor
@@ -196,9 +214,8 @@ int calcularModa(const vector<int>& vetor) {
     return moda;
 }
 
-// Função que aplica o filtro da moda usando os vizinhos
-Mat filtro_moda(const Mat& imgOriginal) {
-    // Copia a imagem original para evitar alterações na imagem original
+Mat filtro_moda(const Mat& imgOriginal, const std::string& caminhoSalvar) {
+    // Copiar a imagem original
     Mat img = imgOriginal.clone();
 
     // Obter as dimensões da imagem
@@ -206,8 +223,8 @@ Mat filtro_moda(const Mat& imgOriginal) {
     int largura = img.cols;
 
     // Iterar sobre os pixels da imagem
-    for (int i = 1; i < altura - 1; i++) { // Alterado para evitar acessar pixels fora dos limites
-        for (int j = 1; j < largura - 1; j++) { // Alterado para evitar acessar pixels fora dos limites
+    for (int i = 1; i < altura - 1; i++) {
+        for (int j = 1; j < largura - 1; j++) {
             Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
 
             // Iterar sobre os canais de cor (B, G, R)
@@ -217,10 +234,16 @@ Mat filtro_moda(const Mat& imgOriginal) {
 
                 // Calcular a moda dos vizinhos
                 int moda = calcularModa(vizinhos);
-                
                 pixelCentral[canal] = moda;
             }
         }
+    }
+
+    // Salvar a imagem no caminho especificado
+    if (!imwrite(caminhoSalvar, img)) {
+        cerr << "Erro ao salvar a imagem em: " << caminhoSalvar << endl;
+    } else {
+        cout << "Imagem salva com sucesso em: " << caminhoSalvar << endl;
     }
 
     return img;

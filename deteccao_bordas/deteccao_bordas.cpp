@@ -31,7 +31,7 @@ Mat reduzirQuantizacaoCores(const Mat& imagem, int k) {
 
 
 
-Mat filtro_roberts(const Mat& imagem, const std::string& caminhoSalvar) {
+Mat filtro_roberts(const Mat& imagem, const string& caminhoSalvar) {
     // Cria uma cópia da imagem original para trabalhar nela
     Mat imagemOriginal = imagem.clone();
 
@@ -99,8 +99,4 @@ Mat filtro_roberts(const Mat& imagem, const std::string& caminhoSalvar) {
 }
 
 
-=======
-    return imagemFiltrada;
-    
-}
->>>>>>> a7693e5f44cca8ff8afbb6faa71c32fd7c2c922e
+
