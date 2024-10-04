@@ -8,6 +8,7 @@
 #include "./histograma/histograma_global.cpp"
 #include "./histograma/histograma_global2.cpp"
 #include "./filtros_espaciais/filtros_espaciais.cpp"
+#include "./deteccao_bordas/deteccao_bordas.cpp"
 
 
 
@@ -15,7 +16,7 @@ using namespace cv;
 using namespace std;
 
 int main() {
-    Mat imagem = imread("./imagens/londres.jpg", IMREAD_COLOR);
+    Mat imagem = imread("./imagens/w1.jpeg", IMREAD_COLOR);
     if (imagem.empty()) {
         cout << "Erro ao carregar a imagem!" << endl;
         return -1;
@@ -29,6 +30,7 @@ int main() {
                     "3 - Gerar histograma Global\n"
                     "4 - Gerar histograma local\n"
                     "5 - Filtros Espacias\n"
+                    "6 - Detecção de Bordas\n"
                     "\nDigite o número da opcao: ";
     
     
@@ -202,13 +204,8 @@ int main() {
        // REVISAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // Calcula o histograma
-        vector<int> histograma;
-        calcularHistograma2(imagem, histograma);
-
-        // Salva o histograma em um arquivo texto
-        salvarHistograma2(histograma, "histograma.txt");
-
-        cout << "Histograma salvo em 'histograma.txt'" << endl;
+        
+        calcularSalvarHistogramaGlobal(imagem, "histograma.txt");
         return 0;
 
 
@@ -318,6 +315,15 @@ int main() {
 
                     
         */
+
+       imagem = imread("./imagens/fusca2.png", IMREAD_COLOR);
+        // Aplicar o filtro de Roberts
+        Mat imagemFiltrada = filtro_roberts(imagem);
+
+        // Exibir a imagem original e a filtrada
+        //imshow("Imagem Original", imagem);
+        imshow("Imagem Filtrada - Filtro de Roberts", imagemFiltrada);
+        waitKey(0);
     }
 
     else if(numero_operacao==7){
