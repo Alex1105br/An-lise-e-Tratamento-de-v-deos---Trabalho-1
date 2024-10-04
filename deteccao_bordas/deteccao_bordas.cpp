@@ -9,38 +9,6 @@ using namespace std;
 
 
 
-
-
-// Função para quantizar cores usando K-means
-Mat reduzirCoresKMeans(const Mat& imagem, int numCores) {
-    Mat imgReshape = imagem.reshape(1, imagem.rows * imagem.cols); // Transformar a imagem em uma matriz de N pixels por 3 canais
-    imgReshape.convertTo(imgReshape, CV_32F); // Converter para float
-
-    // Critério de parada do K-means
-    TermCriteria criterio(TermCriteria::EPS + TermCriteria::COUNT, 100, 1.0);
-
-    // Saídas do K-means
-    Mat labels, centers;
-    kmeans(imgReshape, numCores, labels, criterio, 3, KMEANS_PP_CENTERS, centers);
-
-    // Convertendo os centros para uchar para voltar a imagem para o formato 8-bit
-    centers.convertTo(centers, CV_8U);
-
-    // Recriando a imagem a partir dos rótulos
-    Mat imgQuantizada(imagem.size(), imagem.type());
-    for (int i = 0; i < imgQuantizada.rows; i++) {
-        for (int j = 0; j < imgQuantizada.cols; j++) {
-            int clusterIdx = labels.at<int>(i * imgQuantizada.cols + j);
-            imgQuantizada.at<Vec3b>(i, j) = centers.at<Vec3b>(clusterIdx);
-        }
-    }
-
-    
-
-    return imgQuantizada;
-}
-
-
 // Função para reduzir a quantização de cores usando K-Means
 Mat reduzirQuantizacaoCores(const Mat& imagem, int k) {
     Mat dados;
