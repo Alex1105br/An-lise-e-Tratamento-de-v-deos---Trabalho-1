@@ -9,6 +9,7 @@
 #include "./histograma/histograma_local.cpp"
 #include "./filtros_espaciais/filtros_espaciais.cpp"
 #include "./deteccao_bordas/deteccao_bordas.cpp"
+#include "./BIC/bic.cpp"
 
 
 
@@ -31,6 +32,7 @@ int main() {
                     "4 - Gerar histograma local (4 Partições)\n"
                     "5 - Filtros Espacias\n"
                     "6 - Detecção de Bordas\n"
+                    "7 - Extração de Propriedades de cor (BIC)"
                     "\nDigite o número da opcao: ";
     
     
@@ -338,6 +340,17 @@ int main() {
 
                     
         */
+        // Carregar a imagem
+        Mat imagemOriginal = imread("./imagens/salaEstar.jpg");
+        if (imagemOriginal.empty()) {
+            cerr << "Erro ao carregar a imagem." << endl;
+            return -1;
+        }
+
+        // Executar a extração de propriedades de cor
+        extrairPropriedadesCor(imagemOriginal, 64, "./imagens/saida");
+
+
     }
     
     return 0;
