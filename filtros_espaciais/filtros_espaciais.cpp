@@ -90,6 +90,30 @@ vector<int> obterVizinhos(const Mat& img, int i, int j, int canal) {
     return vetor_k; // Retorna os valores dos vizinhos
 }
 
+// Função para obter os vizinhos de um pixel com uma janela 5x5
+vector<int> obterVizinhos_5x5(const Mat& img, int i, int j, int canal) {
+    vector<int> vetor_k;
+
+    // Definir as posições relativas dos 24 vizinhos em uma janela 5x5
+    int dx[] = {-2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0,  0,  0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2};
+    int dy[] = {-2, -1,  0,  1,  2, -2, -1,  0,  1,  2, -2, -1, 1, 2, 0, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2};
+
+    // Iterar sobre os 24 vizinhos
+    for (int k = 0; k < 25; k++) {
+        int novoI = i + dx[k];
+        int novoJ = j + dy[k];
+
+        // Verificar se o vizinho está dentro dos limites da imagem
+        if (novoI >= 0 && novoI < img.rows && novoJ >= 0 && novoJ < img.cols) {
+            // Armazenar o valor do canal correspondente do vizinho no vetor
+            vetor_k.push_back(img.at<Vec3b>(novoI, novoJ)[canal]);
+        }
+    }
+
+    return vetor_k; // Retorna os valores dos vizinhos
+}
+
+
 Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k, const std::string& caminhoSalvar) {
     // Copiar a imagem original
     Mat img = imgOriginal.clone();
@@ -224,6 +248,8 @@ Mat filtro_moda(const Mat& imgOriginal, const std::string& caminhoSalvar) {
     // Obter as dimensões da imagem
     int altura = img.rows;
     int largura = img.cols;
+
+    
 
     // Iterar sobre os pixels da imagem
     for (int i = 1; i < altura - 1; i++) {
