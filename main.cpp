@@ -316,8 +316,11 @@ int main() {
                     
         */
 
-       imagem = imread("./imagens/fusca2.png", IMREAD_COLOR);
-        // Aplicar o filtro de Roberts
+        imagem = imread("./imagens/salaEstar.jpg", IMREAD_COLOR);
+        // Reduz a quantização de cores para 32 cores
+        //Mat imagemQuantizada = reduzirQuantizacaoCores(imagem, 32);
+
+        // Aplica o filtro de Roberts na imagem quantizada
         Mat imagemFiltrada = filtro_roberts(imagem);
 
         // Exibir a imagem original e a filtrada

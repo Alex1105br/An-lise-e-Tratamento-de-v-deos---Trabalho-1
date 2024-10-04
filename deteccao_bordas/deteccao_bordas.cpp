@@ -1,21 +1,79 @@
 #include <opencv2/opencv.hpp>
 #include <cmath>
 #include <iostream>
+#include <iostream>
+#include <vector>
 
 using namespace cv;
 using namespace std;
+
+
+
+
+
+// Função para quantizar cores usando K-means
+Mat reduzirCoresKMeans(const Mat& imagem, int numCores) {
+    Mat imgReshape = imagem.reshape(1, imagem.rows * imagem.cols); // Transformar a imagem em uma matriz de N pixels por 3 canais
+    imgReshape.convertTo(imgReshape, CV_32F); // Converter para float
+
+    // Critério de parada do K-means
+    TermCriteria criterio(TermCriteria::EPS + TermCriteria::COUNT, 100, 1.0);
+
+    // Saídas do K-means
+    Mat labels, centers;
+    kmeans(imgReshape, numCores, labels, criterio, 3, KMEANS_PP_CENTERS, centers);
+
+    // Convertendo os centros para uchar para voltar a imagem para o formato 8-bit
+    centers.convertTo(centers, CV_8U);
+
+    // Recriando a imagem a partir dos rótulos
+    Mat imgQuantizada(imagem.size(), imagem.type());
+    for (int i = 0; i < imgQuantizada.rows; i++) {
+        for (int j = 0; j < imgQuantizada.cols; j++) {
+            int clusterIdx = labels.at<int>(i * imgQuantizada.cols + j);
+            imgQuantizada.at<Vec3b>(i, j) = centers.at<Vec3b>(clusterIdx);
+        }
+    }
+
+    
+
+    return imgQuantizada;
+}
+
+
+// Função para reduzir a quantização de cores usando K-Means
+Mat reduzirQuantizacaoCores(const Mat& imagem, int k) {
+    Mat dados;
+    imagem.convertTo(dados, CV_32F);
+    dados = dados.reshape(1, imagem.rows * imagem.cols);
+
+    Mat labels, centros;
+    kmeans(dados, k, labels, TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 10, 1.0), 3, KMEANS_PP_CENTERS, centros);
+
+    Mat novaImagem(imagem.size(), imagem.type());
+    for (int i = 0; i < dados.rows; i++) {
+        novaImagem.at<Vec3b>(i / imagem.cols, i % imagem.cols) = Vec3b(centros.at<float>(labels.at<int>(i), 0),
+                                                                      centros.at<float>(labels.at<int>(i), 1),
+                                                                      centros.at<float>(labels.at<int>(i), 2));
+    }
+
+    return novaImagem;
+}
 
 // Função para aplicar o filtro de Roberts
 Mat filtro_roberts(const Mat& imagem) {
     // Cria uma cópia da imagem original para trabalhar nela
     Mat imagemOriginal = imagem.clone();
 
-    int altura = imagemOriginal.rows;
-    int largura = imagemOriginal.cols;
-    int canais = imagemOriginal.channels();
+    // Reduz a quantização de cores para 32 cores usando K-means
+    Mat imagemReduzida = reduzirQuantizacaoCores(imagemOriginal, 32);
+
+    int altura = imagemReduzida.rows;
+    int largura = imagemReduzida.cols;
+    int canais = imagemReduzida.channels();
 
     // Cria uma matriz para armazenar a imagem filtrada, com o mesmo tamanho da original
-    Mat imagemFiltrada = Mat::zeros(imagemOriginal.size(), CV_32F);
+    Mat imagemFiltrada = Mat::zeros(imagemReduzida.size(), CV_32F);
 
     // Máscaras de Roberts
     Mat Gx = (Mat_<float>(2, 2) << 1, 0, 0, -1);
@@ -28,10 +86,10 @@ Mat filtro_roberts(const Mat& imagem) {
 
                 // Extraindo a região de 2x2 em torno do pixel atual
                 if (canais == 1) {
-                    regiao = imagemOriginal(Rect(j, i, 2, 2)); // Escala de cinza
+                    regiao = imagemReduzida(Rect(j, i, 2, 2)); // Escala de cinza
                 } else {
                     vector<Mat> canaisImagem;
-                    split(imagemOriginal, canaisImagem); // Separar canais da imagem colorida
+                    split(imagemReduzida, canaisImagem); // Separar canais da imagem colorida
                     regiao = canaisImagem[canal](Rect(j, i, 2, 2)); // Canal específico
                 }
 
@@ -50,6 +108,90 @@ Mat filtro_roberts(const Mat& imagem) {
                     imagemFiltrada.at<float>(i, j) = gradiente; // Atualiza valor em escala de cinza
                 } else {
                     imagemFiltrada.at<float>(i, j) += gradiente; // Soma o gradiente por canal
+                }
+            }
+        }
+    }
+
+    // Normalização para que os valores fiquem entre 0 e 255
+    double minVal, maxVal;
+    minMaxLoc(imagemFiltrada, &minVal, &maxVal);
+    imagemFiltrada.convertTo(imagemFiltrada, CV_8U, 255.0 / maxVal);
+
+    return imagemFiltrada;
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Função para aplicar o filtro Laplaciano
+Mat filtro_laplaciano(const Mat& imagem) {
+    // Cria uma cópia da imagem original para trabalhar nela
+    Mat imagemOriginal = imagem.clone();
+
+    // Reduz a quantização de cores para 32 cores usando K-means
+    Mat imagemReduzida = reduzirCoresKMeans(imagemOriginal, 32);
+
+    int altura = imagemReduzida.rows;
+    int largura = imagemReduzida.cols;
+    int canais = imagemReduzida.channels();
+
+    // Cria uma matriz para armazenar a imagem filtrada, com o mesmo tamanho da original
+    Mat imagemFiltrada = Mat::zeros(imagemReduzida.size(), CV_32F);
+
+    // Máscara Laplaciana (usaremos a de 4 vizinhos)
+    Mat laplacianKernel = (Mat_<float>(3, 3) << 0, -1, 0, -1, 4, -1, 0, -1, 0);
+
+    for (int canal = 0; canal < canais; canal++) {
+        for (int i = 1; i < altura - 1; i++) { // Começa de 1 e vai até altura-1 para evitar bordas
+            for (int j = 1; j < largura - 1; j++) {
+                Mat regiao;
+
+                // Extraindo a região de 3x3 em torno do pixel atual
+                if (canais == 1) {
+                    regiao = imagemReduzida(Rect(j - 1, i - 1, 3, 3)); // Escala de cinza
+                } else {
+                    vector<Mat> canaisImagem;
+                    split(imagemReduzida, canaisImagem); // Separar canais da imagem colorida
+                    regiao = canaisImagem[canal](Rect(j - 1, i - 1, 3, 3)); // Canal específico
+                }
+
+                // Converter a região para float para realizar a multiplicação
+                Mat regiaoFloat;
+                regiao.convertTo(regiaoFloat, CV_32F);
+
+                // Aplicando o operador Laplaciano
+                float laplaciano = sum(laplacianKernel.mul(regiaoFloat))[0]; // Produto da máscara Laplaciana pela região
+
+                if (canais == 1) {
+                    imagemFiltrada.at<float>(i, j) = laplaciano; // Atualiza valor em escala de cinza
+                } else {
+                    imagemFiltrada.at<float>(i, j) += laplaciano; // Soma o gradiente por canal
                 }
             }
         }
