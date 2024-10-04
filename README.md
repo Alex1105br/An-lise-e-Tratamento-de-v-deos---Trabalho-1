@@ -40,8 +40,12 @@ Run the compiled program:
 
 ## File Descriptions
 
+- `main.cpp`: The main entry point of the application where image processing functionalities are called and executed.
 - `histograma_global.cpp`: Contains functionality to compute and save the global histogram of an image.
 - `histograma_local.cpp`: Contains functionality to compute and save the local histograms by dividing the image into four partitions.
 - `transformadas.cpp`: Implements various image transformations, including logarithmic scaling and contrast expansion.
+- `deteccao_bordas.cpp`: Implements various edge detection algorithms (e.g., Canny, Sobel) to identify and highlight edges in images. The output is saved to a specified path.
+- `filtros_espaciais.cpp`: Implements spatial filters for noise reduction and image enhancement, allowing for the application of different kernel sizes and types.
+
 
 
