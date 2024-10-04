@@ -122,26 +122,28 @@ Mat filtro_K_Vizinhos_Proximos(const Mat& imgOriginal, int k, const std::string&
     int altura = img.rows;
     int largura = img.cols;
 
-    // Iterar sobre os pixels da imagem
-    for (int i = 1; i < altura - 1; i++) {
-        for (int j = 1; j < largura - 1; j++) {
-            Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
+    for(int x=0;x<3;x++){
+        // Iterar sobre os pixels da imagem
+        for (int i = 1; i < altura - 1; i++) {
+            for (int j = 1; j < largura - 1; j++) {
+                Vec3b& pixelCentral = img.at<Vec3b>(i, j); // Referência ao pixel central
 
-            // Iterar sobre os canais de cor (B, G, R)
-            for (int canal = 0; canal < 3; canal++) {
-                // Obter os vizinhos do pixel central
-                vector<int> vizinhos = obterVizinhos(img, i, j, canal);
+                // Iterar sobre os canais de cor (B, G, R)
+                for (int canal = 0; canal < 3; canal++) {
+                    // Obter os vizinhos do pixel central
+                    vector<int> vizinhos = obterVizinhos(img, i, j, canal);
 
-                // Ordenar e limitar ao valor de k vizinhos
-                if (vizinhos.size() > k) {
-                    sort(vizinhos.begin(), vizinhos.end());
-                    vizinhos.resize(k);
+                    // Ordenar e limitar ao valor de k vizinhos
+                    if (vizinhos.size() > k) {
+                        sort(vizinhos.begin(), vizinhos.end());
+                        vizinhos.resize(k);
+                    }
+
+                    // Calcular a média dos k vizinhos mais próximos
+                    int soma_k_proximos = std::accumulate(vizinhos.begin(), vizinhos.end(), 0);
+                    int media_k = (pixelCentral[canal] + soma_k_proximos) / (vizinhos.size() + 1);
+                    pixelCentral[canal] = saturate_cast<uchar>(media_k);
                 }
-
-                // Calcular a média dos k vizinhos mais próximos
-                int soma_k_proximos = std::accumulate(vizinhos.begin(), vizinhos.end(), 0);
-                int media_k = (pixelCentral[canal] + soma_k_proximos) / (vizinhos.size() + 1);
-                pixelCentral[canal] = saturate_cast<uchar>(media_k);
             }
         }
     }
