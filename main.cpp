@@ -234,6 +234,9 @@ int main() {
                     
         */
        int num_opcao;
+       imagem = imread("./imagens/imagem_com_ruido_sal_e_pimenta.png", IMREAD_COLOR);
+
+
        string op_filtros_espaciais = "\nEscolha um dos Filtros Espaciais abaixo:\n"
                                      "1 - Filtro da Média\n"
                                      "2 - Filtro dos K vizinhos mais próximos\n"
@@ -254,7 +257,7 @@ int main() {
                     
             */
 
-           Mat imagem_media = filtro_da_media(imagem, "./imagens/saida/imagem_Media.jpg");
+           Mat imagem_media = filtro_da_media(imagem, "./imagens/saida/imagem_Media_salPimenta.png");
 
            imshow("Filtro da Média", imagem_media);
            waitKey(0);
@@ -273,7 +276,7 @@ int main() {
            cout << "\nDigite um valor para o K: ";
            cin >> k;
 
-           Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k, "./imagens/saida/imagem_Kvizinhos.jpg");
+           Mat imagem_k_vizinhos = filtro_K_Vizinhos_Proximos(imagem, k, "./imagens/saida/imagem_Kvizinhos_salPimenta.png");
 
            imshow("Filtro K vizinhos mais próximos", imagem_k_vizinhos);
            waitKey(0);
@@ -289,7 +292,7 @@ int main() {
             */
            
 
-           Mat imagem_mediana = filtro_mediana(imagem, "./imagens/saida/imagem_Mediana.jpg");
+           Mat imagem_mediana = filtro_mediana(imagem, "./imagens/saida/imagem_Mediana_salPimenta.png");
 
 
            imshow("Filtro da Mediana", imagem_mediana);
@@ -300,7 +303,7 @@ int main() {
         if(num_opcao==4){
             
             //Revisar o código, ou encontrar uma imagem que seja boa para teste este filtro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            Mat imagem_moda = filtro_moda(imagem, "./imagens/saida/imagem_Moda.jpg");
+            Mat imagem_moda = filtro_moda(imagem, "./imagens/saida/imagem_Moda_salPimenta.png");
 
 
            imshow("Filtro da Moda", imagem_moda);
