@@ -234,7 +234,7 @@ int main() {
                     
         */
        int num_opcao;
-       imagem = imread("./imagens/imagem_com_ruido_sal_e_pimenta.png", IMREAD_COLOR);
+       imagem = imread("./imagens/imagem_com_ruido_sal_e_pimenta_colorido.png", IMREAD_COLOR);
 
 
        string op_filtros_espaciais = "\nEscolha um dos Filtros Espaciais abaixo:\n"

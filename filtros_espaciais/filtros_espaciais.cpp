@@ -235,9 +235,10 @@ Mat filtro_moda(const Mat& imgOriginal, const std::string& caminhoSalvar) {
                 // Obter os vizinhos do pixel central
                 vector<int> vizinhos = obterVizinhos(img, i, j, canal);
 
+
                 // Calcular a moda dos vizinhos
                 int moda = calcularModa(vizinhos);
-                pixelCentral[canal] = moda;
+                pixelCentral[canal] = moda; 
             }
         }
     }
