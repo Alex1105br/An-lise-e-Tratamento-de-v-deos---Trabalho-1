@@ -69,27 +69,6 @@ Mat filtro_escalaCinza(const Mat& img_original, const std::string& caminhoSalvar
 }
 
 
-Mat aumenta_brilho(const Mat& img_original, int valorBrilho){
-    Mat img = img_original.clone();
-
-    // Obtém as dimensões da imagem
-    int altura = img.rows;
-    int largura = img.cols;
-
-    for(int x = 0; x < altura; x++){
-        for(int y = 0; y < largura; y++){
-            Vec3b& pixel = img.at<Vec3b>(x, y);
-
-            // Limita os valores dos canais a 255, se ultrapassarem
-            pixel[0] = std::min(pixel[0] + valorBrilho, 255); // Canal azul
-            pixel[1] = std::min(pixel[1] + valorBrilho, 255); // Canal verde
-            pixel[2] = std::min(pixel[2] + valorBrilho, 255); // Canal vermelho
-        }
-    }
-
-    return img;
-}
-
 Mat aumenta_brilho(const Mat& img_original, int valorBrilho, const std::string& caminhoSalvar) {
     Mat img = img_original.clone();
 
